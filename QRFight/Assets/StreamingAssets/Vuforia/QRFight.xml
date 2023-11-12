@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+  <Tracking>
+    <ImageTarget name="QRFightAnotherWarrior" size="0.200000 0.179677" />
+    <ImageTarget name="QRLegoWarrior" size="0.120000 0.106447" />
+  </Tracking>
+</QCARConfig>
