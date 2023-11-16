@@ -5,7 +5,11 @@ using UnityEngine;
 public class LookAtTarget : MonoBehaviour
 {
     public Transform Target;
-   
+    private Animator mAnimator;
+    private void Start()
+    {
+        mAnimator = GetComponent<Animator>();
+    }
     private void OnCollisionEnter(Collision collision)
     {
         
@@ -13,6 +17,8 @@ public class LookAtTarget : MonoBehaviour
         if (collision.gameObject != this.gameObject)
         {
             Target = collision.gameObject.transform;
+            if (mAnimator != null)
+                mAnimator.SetBool("Alert", true);
             StartCoroutine(ForceLookAt());
             this.GetComponent<Attack>().SetEnemy(collision.gameObject);
         }
@@ -21,6 +27,8 @@ public class LookAtTarget : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         Target = null;
+        if(mAnimator!=null)
+        mAnimator.SetBool("Alert", false);
         this.GetComponent<Attack>().SetEnemy(null);
         StopCoroutine(ForceLookAt());
 

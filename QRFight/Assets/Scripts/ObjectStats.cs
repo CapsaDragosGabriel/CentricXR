@@ -5,10 +5,15 @@ using TMPro;
 public class ObjectStats : MonoBehaviour
 {
     // Start is called before the first frame update
-   [SerializeField]private float maxLife = 10f,  life = 10f;
+   [SerializeField]private float maxLife = 100f,  life = 10f;
+    private Animator mAnimator;
+    public bool dead = false;
+
 
     public void setMaxLife(float value) { maxLife = value; }
-    public void setLife(float value) { life = value;
+    public void setLife(float value) {
+        dead = false;
+        life = value;
         healthbar.UpdateHealthBar(life, maxLife);
     }
 
@@ -18,37 +23,53 @@ public class ObjectStats : MonoBehaviour
     [SerializeField] private Healthbar healthbar;
     void Start()
     {
+        mAnimator = GetComponentInChildren<Animator>();
+
         healthbar = GetComponentInChildren<Healthbar>();
         StartCoroutine(DPS());
     }
 
-    public void TakeDamage( float damage)
+    public void TakeDamage(GameObject dealer, float damage)
     {
-       life -= damage;
-        healthbar.UpdateHealthBar(life, maxLife);
-        if (life <= 0)
-        {   Debug.Log("ded");
-            if(this.gameObject.CompareTag("Another"))
+        if (!dead)
+        {
+            life -= damage;
+            healthbar.UpdateHealthBar(life, maxLife);
+            if (life <= 0)
             {
-               TextMeshProUGUI enemyScore= GameObject.FindGameObjectWithTag("Main Score").GetComponent<TextMeshProUGUI>();
-                int myInt;
-                int.TryParse(enemyScore.text, out myInt);
-                
-                enemyScore.text = (myInt + 1).ToString();
+                Debug.Log("ded");
 
-                GameObject.FindGameObjectWithTag("GameController").GetComponent<RespawnScript>().CheckScore();
+                if (this.gameObject.CompareTag("Another"))
+                {
+                    TextMeshProUGUI enemyScore = GameObject.FindGameObjectWithTag("Main Score").GetComponent<TextMeshProUGUI>();
+                    int myInt;
+                    int.TryParse(enemyScore.text, out myInt);
+
+
+                    enemyScore.text = (myInt + 1).ToString();
+                    GameObject.FindGameObjectWithTag("GameController").GetComponent<RespawnScript>().CheckScore();
+                }
+                else
+                {
+                    TextMeshProUGUI enemyScore = GameObject.FindGameObjectWithTag("Another Score").GetComponent<TextMeshProUGUI>();
+                    int myInt;
+                    int.TryParse(enemyScore.text, out myInt);
+
+                    enemyScore.text = (myInt + 1).ToString();
+                    GameObject.FindGameObjectWithTag("GameController").GetComponent<RespawnScript>().CheckScore();
+
+                }
+                 dealer.GetComponent<Animator>().SetBool("Alert", false);
+
+                dead = true;
+
+                if (mAnimator != null)
+
+                {
+                    mAnimator.SetTrigger("Death");
+                }
+
             }
-            else
-            {
-                TextMeshProUGUI enemyScore = GameObject.FindGameObjectWithTag("Another Score").GetComponent<TextMeshProUGUI>();
-                int myInt;
-                int.TryParse(enemyScore.text, out myInt);
-
-                enemyScore.text = (myInt + 1).ToString();
-                GameObject.FindGameObjectWithTag("GameController").GetComponent<RespawnScript>().CheckScore();
-
-            }
-            this.gameObject.SetActive(false);
         }
     }
     private IEnumerator DPS()

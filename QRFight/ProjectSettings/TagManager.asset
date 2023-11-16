@@ -9,6 +9,7 @@ TagManager:
   - Main Score
   - Another Score
   - BlackScreen
+  - WinPrompt
   layers:
   - Default
   - TransparentFX

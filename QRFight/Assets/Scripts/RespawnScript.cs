@@ -16,7 +16,6 @@ public class RespawnScript : MonoBehaviour
     {
         playerOne = GameObject.FindGameObjectWithTag("Main");
         playerTwo = GameObject.FindGameObjectWithTag("Another");
-        winPrompt = GameObject.FindGameObjectWithTag("WinPrompt");
     }
     public void CheckScore()
     {
